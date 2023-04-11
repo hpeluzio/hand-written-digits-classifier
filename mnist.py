@@ -39,3 +39,5 @@ classifier.compile(loss = 'categorical_crossentropy',
 classifier.fit(predictors_training, training_class,
                batch_size = 128, epochs = 5,
                validation_data = (predictors_test, test_class))
+
+result = classifier.evaluate(predictors_test, test_class)
