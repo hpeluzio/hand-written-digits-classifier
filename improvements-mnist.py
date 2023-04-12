@@ -1,9 +1,10 @@
 import matplotlib.pyplot as plt
 from keras.datasets import mnist
 from keras.models import Sequential
-from keras.layers import Dense, Flatten
+from keras.layers import Dense, Flatten, Dropout
 from keras.utils import np_utils
 from keras.layers import Conv2D, MaxPooling2D
+from keras.layers.normalization.batch_normalization import BatchNormalization
 
 (X_training, y_training), (X_test, y_test) = mnist.load_data()
 
@@ -29,9 +30,22 @@ test_class = np_utils.to_categorical(y_test, 10)
 classifier = Sequential()
 classifier.add(Conv2D(32, (3, 3), input_shape=(28, 28, 1), 
                       activation = 'relu'))
+# Improvements
+classifier.add(BatchNormalization())
 classifier.add(MaxPooling2D(pool_size = (2, 2)))
-classifier.add(Flatten())
+#classifier.add(Flatten())
+
+# Improvements
+classifier.add(Conv2D(32, (3, 3), activation = 'relu'))
+classifier.add(BatchNormalization())
+classifier.add(MaxPooling2D(pool_size = (2, 2)))
+classifier.add(Flatten()) # Use just one time
+
+
 classifier.add(Dense(units = 128, activation = 'relu'))
+classifier.add(Dropout(0.2))
+classifier.add(Dense(units = 128, activation = 'relu'))
+classifier.add(Dropout(0.2))
 classifier.add(Dense(units = 10, activation = 'softmax'))
 classifier.compile(loss = 'categorical_crossentropy',
                    optimizer = 'adam',
